@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body {
+            width: 100vw;
+            height: 300vh;
+
+            background-image: url('./back.png');
+            background-size: cover;
+            background-repeat: no-repeat;
+            overflow-x: hidden;
+        }
+
+        .orb {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+
+            background-color: blue;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="orb"></div>
+
+    <script>
+        const orb = document.querySelector('.orb'),
+            ease = 0.05,
+            start_position = orb.offsetTop;
+        let animation_running = false,
+            total_offset = 0,
+            scroll_request = 0;
+
+        function animate_scroll() {
+            scroll_request++;
+
+            if (!animation_running) {
+                animation_running = true;
+
+                animation_loop();
+            }
+        }
+
+        function animation_loop() {
+            const current_offset = window.pageYOffset;
+
+            let difference = current_offset - total_offset;
+            difference *= ease;
+
+            if (Math.abs(difference) < 0.05) {
+                scroll_request = 0;
+                total_offset = current_offset;
+                animation_running = false;
+
+                return;
+            }
+
+            orb.style.top = `${start_position - total_offset}px`;
+
+            total_offset += difference;
+
+            requestAnimationFrame(animation_loop);
+        }
+
+        document.addEventListener('scroll', animate_scroll);
+    </script>
+</body>
+
+</html>
